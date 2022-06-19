@@ -23,6 +23,10 @@ app.use("/comments", commentsRoutes);
 
 const PORT = process.env.PORT || 5000;
 
+app.get("/", (req, res) => {
+  res.send("App is running");
+});
+
 mongoose
   .connect(process.env.CONNECTION_URL)
   .then(() =>
