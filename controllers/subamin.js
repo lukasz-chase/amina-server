@@ -86,11 +86,11 @@ export const getSubaminsBySearch = async (req, res) => {
 
 export const createSubamin = async (req, res) => {
   const subamin = req.body;
-  const result = await Promise.all(await uploadFile(req.files));
-  const images = result.reduce((obj, { Location }) => {
+  const result = await Promise.all(await uploadFiles(req.files));
+  const images = result.reduce((obj, { url }) => {
     return {
       ...obj,
-      [Location.split("-")[Location.split("-").length - 1]]: Location,
+      [url.split("-")[url.split("-").length - 1].split(".")[0]]: url,
     };
   }, []);
   Promise.all(req.files.map(({ path }) => unlinkFile(path)));
@@ -114,11 +114,11 @@ export const editSubamin = async (req, res) => {
   const subaminData = req.body;
   const { id } = req.params;
   const oldSubamin = await Subamin.findById(id);
-  const result = await Promise.all(await uploadFile(req.files));
-  const images = result.reduce((obj, { Location }) => {
+  const result = await Promise.all(await uploadFiles(req.files));
+  const images = result.reduce((obj, { url }) => {
     return {
       ...obj,
-      [Location.split("-")[Location.split("-").length - 1]]: Location,
+      [url.split("-")[url.split("-").length - 1].split(".")[0]]: Location,
     };
   }, []);
   Promise.all(req.files.map(({ path }) => unlinkFile(path)));
@@ -149,7 +149,6 @@ export const deleteSubamin = async (req, res) => {
   const { id } = req.params;
   if (!mongoose.Types.ObjectId.isValid(id))
     return res.status(404).send(`No item with id: ${id}`);
-  const subamins = await Subamin.findById(id);
   await Subamin.findByIdAndRemove(id);
 
   res.json({ message: "Subamin deleted successfully." });

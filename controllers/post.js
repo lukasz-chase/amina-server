@@ -103,8 +103,8 @@ export const getSubaminPosts = async (req, res) => {
 
 export const createPost = async (req, res) => {
   const post = req.body;
-  const result = await Promise.all(await uploadFile(req.files));
-  const images = result.map(({ Location }) => Location);
+  const result = await Promise.all(await uploadFiles(req.files));
+  const images = result.map(({ url }) => Location);
   Promise.all(req.files.map(({ path }) => unlinkFile(path)));
   const newPost = new Post({
     ...post,

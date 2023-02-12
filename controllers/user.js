@@ -110,9 +110,8 @@ export const updateInfo = async (req, res) => {
   const { birthday } = req.body;
   if (!mongoose.Types.ObjectId.isValid(id))
     return res.status(404).send(`No user with id: ${id}`);
-  const user = await User.findById(id);
-  const result = await Promise.all(await uploadFile(req.files));
-  const avatar = result.map(({ Location }) => Location);
+  const result = await Promise.all(await uploadFiles(req.files));
+  const avatar = result.map(({ url }) => url);
   Promise.all(req.files.map(({ path }) => unlinkFile(path)));
   await User.findByIdAndUpdate(
     id,

@@ -4,9 +4,6 @@ import fs from "fs";
 import util from "util";
 
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "./uploads");
-  },
   filename: (req, file, cb) => {
     const id = uuidv4();
     cb(null, `${id}-${file.originalname}-${file.fieldname}`);
