@@ -21,7 +21,7 @@ app.use("/posts", postRoutes);
 app.use("/subamins", subaminRoutes);
 app.use("/comments", commentsRoutes);
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 
 app.get("/", (req, res) => {
   res.send("App is running");
