@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 
 import Post from "../models/postModel.js";
 import User from "../models/userModel.js";
-import { uploadFile, deleteFiles } from "../s3.js";
+import { uploadFiles } from "../cloudinary.js";
 import { unlinkFile } from "../middleware/multer.js";
 
 const router = express.Router();
@@ -125,7 +125,6 @@ export const deletePost = async (req, res) => {
   if (!mongoose.Types.ObjectId.isValid(id))
     return res.status(404).send(`No post with id: ${id}`);
   const items = await Post.findById(id);
-  await deleteFiles(items.images);
   await Post.findByIdAndRemove(id);
 
   res.json({ message: "Post deleted successfully." });

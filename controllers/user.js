@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { uploadFile, deleteFiles } from "../s3.js";
+import { uploadFiles } from "../cloudinary.js";
 import { unlinkFile } from "../middleware/multer.js";
 
 import User from "../models/userModel.js";
@@ -113,7 +113,6 @@ export const updateInfo = async (req, res) => {
   const user = await User.findById(id);
   const result = await Promise.all(await uploadFile(req.files));
   const avatar = result.map(({ Location }) => Location);
-  if (user.avatar && avatar) await deleteFiles([user.avatar]);
   Promise.all(req.files.map(({ path }) => unlinkFile(path)));
   await User.findByIdAndUpdate(
     id,

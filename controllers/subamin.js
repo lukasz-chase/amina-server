@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 
 import Subamin from "../models/subaminModel.js";
 import User from "../models/userModel.js";
-import { uploadFile, deleteFiles } from "../s3.js";
+import { uploadFiles } from "../cloudinary.js";
 import { unlinkFile } from "../middleware/multer.js";
 
 const router = express.Router();
@@ -122,13 +122,6 @@ export const editSubamin = async (req, res) => {
     };
   }, []);
   Promise.all(req.files.map(({ path }) => unlinkFile(path)));
-  if (images["logo"] && oldSubamin.logo !== images["logo"])
-    await deleteFiles([oldSubamin.logo]);
-  if (
-    images["backgroundImg"] &&
-    oldSubamin.backgroundImg !== images["backgroundImg"]
-  )
-    await deleteFiles([oldSubamin.backgroundImg]);
 
   try {
     const subaminMod = await Subamin.findByIdAndUpdate(
@@ -157,7 +150,6 @@ export const deleteSubamin = async (req, res) => {
   if (!mongoose.Types.ObjectId.isValid(id))
     return res.status(404).send(`No item with id: ${id}`);
   const subamins = await Subamin.findById(id);
-  await deleteFiles(subamins.images);
   await Subamin.findByIdAndRemove(id);
 
   res.json({ message: "Subamin deleted successfully." });
