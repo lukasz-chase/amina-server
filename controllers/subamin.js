@@ -87,9 +87,7 @@ export const getSubaminsBySearch = async (req, res) => {
 export const createSubamin = async (req, res) => {
   const subamin = req.body;
   const result = await Promise.all(await uploadFiles(req.files));
-  console.log(result);
   const images = result.reduce((obj, { url }) => {
-    console.log(url);
     return {
       ...obj,
       [url.split("-")[url.split("-").length - 1].split(".")[0]]: url,

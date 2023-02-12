@@ -104,7 +104,7 @@ export const getSubaminPosts = async (req, res) => {
 export const createPost = async (req, res) => {
   const post = req.body;
   const result = await Promise.all(await uploadFiles(req.files));
-  const images = result.map(({ url }) => Location);
+  const images = result.map(({ url }) => url);
   Promise.all(req.files.map(({ path }) => unlinkFile(path)));
   const newPost = new Post({
     ...post,
@@ -124,7 +124,6 @@ export const deletePost = async (req, res) => {
   const { id } = req.params;
   if (!mongoose.Types.ObjectId.isValid(id))
     return res.status(404).send(`No post with id: ${id}`);
-  const items = await Post.findById(id);
   await Post.findByIdAndRemove(id);
 
   res.json({ message: "Post deleted successfully." });
